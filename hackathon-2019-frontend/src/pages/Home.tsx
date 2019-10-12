@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationObject} from "../App";
+import {NavigationObject} from '../App';
 
 interface HomeProps {
     match: any;
@@ -29,12 +29,12 @@ export default class Home extends React.Component<HomeProps, {}> {
                         <table style={{margin: 'auto'}}>
                             <thead>
                                 <tr>
-                                    {keys.map(el => <th>{el}</th>)}
+                                    {keys.map((el, key) => <th key={key}>{el}</th>)}
                                 </tr>
                             </thead>
                             <tbody>
-                                {Home.pricing.map(el =>
-                                <tr>
+                                {Home.pricing.map((el, key) =>
+                                <tr key={key}>
                                     <td>{el.description}</td>
                                     <td>€ {el.price}</td>
                                 </tr>)}

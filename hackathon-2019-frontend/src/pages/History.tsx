@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationObject} from "../App";
+import {NavigationObject} from '../App';
 
 interface HistoryProps {
     match: any;
@@ -21,10 +21,6 @@ export default class History extends React.Component<HistoryProps, HistoryState>
         fetch(URL)
             .then(response => response.json())
             .then(result => this.mountedSetState({data: result.results}));
-    }
-
-    componentDidUpdate(_: Readonly<{}>, prevState: Readonly<HistoryState>) {
-      console.log('History.componentDidUpdate')
     }
 
     componentWillUnmount() {

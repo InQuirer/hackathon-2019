@@ -86,6 +86,15 @@
   }
 }
 
+div.warning {
+  display: inline-block;
+  padding: 0 10px;
+  background-color: #94941a;
+  height: 100%;
+  position: absolute;
+  right: 42%;
+}
+
 ::-webkit-scrollbar-track {
   background-color: #434954;
 }

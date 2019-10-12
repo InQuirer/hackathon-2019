@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationObject} from "../App";
+import {NavigationObject} from '../App';
 
 interface AdminProps {
     match: any;
@@ -23,10 +23,6 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             .then(result => this.mountedSetState({data: result}));
     }
 
-    componentDidUpdate(_: Readonly<{}>, prevState: Readonly<AdminState>) {
-      console.log('Admin.componentDidUpdate')
-    }
-
     componentWillUnmount() {
         this._isMounted = false;
     }
@@ -36,13 +32,13 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     render(): React.ReactNode {
         return (
             <div className="Admin">
-                {Object.entries(this.state.data).map((key: [string, any]) => (
-                    <div className="DataRow">
+                {Object.entries(this.state.data).map((el: [string, any], key) => (
+                    <div key={key} className="DataRow">
                         <div>
-                            {key[0]}
+                            {el[0]}
                         </div>
                         <div>
-                            {JSON.stringify(key[1])}
+                            {JSON.stringify(el[1])}
                         </div>
                     </div>
                 ))}
