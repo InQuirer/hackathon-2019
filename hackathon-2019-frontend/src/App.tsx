@@ -2,7 +2,7 @@ import React from 'react';
 import './App.scss';
 import { BrowserRouter, NavLink, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import History from './pages/History';
+import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -26,18 +26,25 @@ export interface UserCredentials {
     password: string
 }
 
+export function getUser(): User {
+    const storedUser = localStorage.getItem('user');
+    const newUser = (): User => ({name: '', email: '', sessionID: ''});
+    function validUser(user: User): User {
+        if (user.name && user.email && user.sessionID) {
+            return user;
+        }
+        localStorage.clear();
+        return newUser();
+    }
+    return storedUser ? validUser(JSON.parse(storedUser)) : newUser();
+}
+
 const navigationMap: NavigationObject[] = [
-    History.nav,
+    Dashboard.nav,
     Admin.nav
 ];
 
-interface AppState {user: User, validationPassed: boolean | undefined}
-
-const currentUser: User = {
-    name: '',
-    email: '',
-    sessionID: ''
-};
+interface AppState {validationPassed: boolean | undefined}
 
 const getNavigationTabs = (user: User) => {
     return (
@@ -88,17 +95,13 @@ const getNavigationTabs = (user: User) => {
 
 export default class App extends React.Component<{}, AppState> {
     private static background = require('./static/img/Website-Design-Background.png');
+    private user: User = getUser();
 
     constructor(props: {}) {
         super(props);
         this.state = {
-            user: currentUser,
             validationPassed: undefined
         }
-    }
-
-    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<AppState>, snapshot?: any): void {
-
     }
 
     render() {
@@ -107,7 +110,7 @@ export default class App extends React.Component<{}, AppState> {
                 <div className="App">
                     <div className="App-header">
                         <div className="App-navigation">
-                            {getNavigationTabs(this.state.user)}
+                            {getNavigationTabs(this.user)}
                             {this.state.validationPassed === false &&
                                 <div className="warning">
                                     Please check your input
@@ -115,24 +118,25 @@ export default class App extends React.Component<{}, AppState> {
                         </div>
                     </div>
                     <div className="App-content" style={{backgroundImage: `url(${App.background})`}}>
-                        <Route exact path="/" render={() => <Redirect to="/home"/>}/>
-                        <Route exact path="/home" component={Home}/>
-                        {this.state.user.sessionID ?
+                        <Route exact path={Home.nav.path} component={Home}/>
+                        <Route exact path={Logout.nav.path} render={(props) =>
+                            <Logout {...props} logout={this.logout}/>}/>
+                        {this.user.sessionID ?
                             <React.Fragment>
-                                < Route exact path={History.nav.path} component={History} />
-                                {/*<Route exact path={`${History.nav.path}/:ID`} component={History} />*/}
-                                <Route exact path={Admin.nav.path} component={Admin} />
+                                <Route exact path={Login.nav.path} render={() => <Redirect to={Home.nav.path}/>}/>
+                                <Route exact path={Dashboard.nav.path} component={Dashboard}/>
+                                {/*<Route exact path={`${Dashboard.nav.path}/:ID`} component={Dashboard} />*/}
+                                <Route exact path={Admin.nav.path} component={Admin}/>
                                 {/*<Route exact path={`${Admin.nav.path}/:ID`} component={Admin} />*/}
-                                <Route exact path="/logout" render={(props) =>
-                                    <Logout {...props} logout={this.logout} />}/>
                             </React.Fragment>
                             :
                             <React.Fragment>
-                                <Route exact path="/login" render={(props) =>
-                                    <Login {...props} authenticate={this.authenticate} />}/>
+                                <Route exact path={Login.nav.path} render={(props) =>
+                                    <Login {...props} authenticate={this.authenticate}/>}/>
                             </React.Fragment>
 
                         }
+                        <Route exact path="/" render={() => <Redirect to={Home.nav.path}/>}/>
                     </div>
                 </div>
             </BrowserRouter>
@@ -146,18 +150,17 @@ export default class App extends React.Component<{}, AppState> {
             validationPassed = undefined;
         }
         if (validationPassed) {
-            this.state.user.email = userCredentials.email;
-            this.state.user.name = userCredentials.email.split('@')[0];
-            this.state.user.sessionID = getHashes()[1];
+            this.user.name = userCredentials.email.split('@')[0];
+            this.user.email = userCredentials.email;
+            this.user.sessionID = getHashes()[1];
+            localStorage.setItem('user', JSON.stringify(this.user));
         }
-        this.setState({validationPassed: validationPassed, user: this.state.user});
+        this.setState({validationPassed: validationPassed});
     };
 
     private logout = () => {
-        this.setState({validationPassed: undefined, user: {
-            name: '',
-            email: '',
-            sessionID: ''
-        }});
+        localStorage.clear();
+        this.user = getUser();
+        this.setState({validationPassed: undefined});
     };
 }

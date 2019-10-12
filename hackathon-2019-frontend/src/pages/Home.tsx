@@ -11,10 +11,6 @@ export default class Home extends React.Component<HomeProps, {}> {
         {description: 'Item 1', price: 5}
     ];
 
-    constructor(props: HomeProps) {
-        super(props);
-    }
-
     render(): React.ReactNode {
         const keys = Object.keys(Home.pricing[0]);
         return (
