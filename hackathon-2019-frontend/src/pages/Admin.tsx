@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationObject} from "../App";
+import {NavigationObject} from '../App';
 
 interface AdminProps {
     match: any;
@@ -20,11 +20,8 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
         const URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
         fetch(URL)
             .then(response => response.json())
-            .then(result => this.mountedSetState({data: result}));
-    }
-
-    componentDidUpdate(_: Readonly<{}>, prevState: Readonly<AdminState>) {
-      console.log('Admin.componentDidUpdate')
+            .then(result => this.mountedSetState({data: result}))
+            .catch(e => console.log(e));;
     }
 
     componentWillUnmount() {
@@ -34,15 +31,23 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     mountedSetState = (state: {}) => this._isMounted && this.setState(state);
 
     render(): React.ReactNode {
+        const keys = Object.keys(this.state.data);
         return (
             <div className="Admin">
-                {Object.entries(this.state.data).map((key: [string, any]) => (
-                    <div className="DataRow">
+                <div className="DataRow">
+                    {keys.map((value, key) =>
                         <div>
-                            {key[0]}
+                            {!key ? value : <span>{value}</span>}
+                        </div>
+                    )}
+                </div>
+                {Object.entries(this.state.data).map((el: [string, any], key) => (
+                    <div key={key} className="DataRow">
+                        <div>
+                            {el[0]}
                         </div>
                         <div>
-                            {JSON.stringify(key[1])}
+                            <span>{JSON.stringify(el[1])}</span>
                         </div>
                     </div>
                 ))}
