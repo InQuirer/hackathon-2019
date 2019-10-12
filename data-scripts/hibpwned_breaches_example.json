@@ -1,0 +1,25 @@
+[
+  {
+    'Name': 'CrackedTO',
+    'Title': 'Cracked.to',
+    'Domain': 'cracked.to',
+    'BreachDate': '2019-07-21',
+    'AddedDate': '2019-08-12T11:18:56Z',
+    'ModifiedDate': '2019-08-12T11:18:56Z',
+    'PwnCount': 749161,
+    'Description': 'In July 2019, the hacking website <a href="https://cracked.to" target="_blank" rel="noopener">Cracked.to</a> suffered a data breach. There were 749k unique email addresses spread across 321k forum users and other tables in the database. A rival hacking website claimed responsibility for breaching the MyBB based forum which disclosed email and IP addresses, usernames, private messages and passwords stored as bcrypt hashes.',
+    'LogoPath': 'https://haveibeenpwned.com/Content/Images/PwnedLogos/CrackedTO.png',
+    'DataClasses': [
+      'Email addresses',
+      'IP addresses',
+      'Passwords',
+      'Private messages',
+      'Usernames'
+    ],
+    'IsVerified': True,
+    'IsFabricated': False,
+    'IsSensitive': False,
+    'IsRetired': False,
+    'IsSpamList': False
+  }
+]
