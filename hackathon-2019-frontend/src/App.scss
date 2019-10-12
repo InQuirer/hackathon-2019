@@ -1,12 +1,16 @@
 .App {
-  background-color: #282c34;
+  background-color: #242528;
   color: white;
   height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  //background-color: #aaa;
+  background-blend-mode: multiply;
 }
 
 .App-header {
   text-align: left;
-  background-color: #253e41;
+  background-color: #1d1f23;
   font-size: calc(10px + 2vmin);
   height: 50px;
   position: fixed;
@@ -18,9 +22,13 @@
 .App-content {
   padding: 10px;
   text-align: center;
-  background-color: #282c34;
   position: relative;
   top: 50px;
+  height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #aaa;
+  background-blend-mode: multiply;
 }
 
 .App-navigation {
@@ -33,7 +41,7 @@
   display: inline-block;
   padding: 0 10px;
   height: 100%;
-  color: #09d3ac;
+  color: #c6c7c6;
   text-decoration: none;
   transition: 256ms;
   &.right {
@@ -41,10 +49,10 @@
     position: absolute;
   }
   &:hover {
-    background-color: #434954;
+    background-color: #464846;
   }
   &.active {
-    background-color: #677185;
+    background-color: #313233;
   }
 }
 
@@ -53,6 +61,13 @@
   margin: auto;
 }
 
+.Home {
+  //height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  //background-color: #aaa;
+  background-blend-mode: multiply;
+}
 .DataRow {
   display: table-row;
   text-align: left;
@@ -61,7 +76,7 @@
     border: 1px solid black;
     padding: 10px;
     & span {
-      min-width: 200px;
+      //min-width: 200px;
       color: bisque;
       display: inline-table;
     }
@@ -71,20 +86,23 @@
 .Login {
   margin-top: 40vh;
   & input {
-    color: #09d3ac;
+    color: #c6c7c6;
     display: block;
     margin: 10px auto;
     width: 25em;
-    padding: 5px;
-    background-color: #333;
-    border: solid 1px #677185;
-    font-size: 1em;
+    padding: 7px;
+    background-color: #33333333;
+    border: solid 1px #313233;
+    font-size: 1.3em;
     transition: 256ms;
+    &:focus {
+      filter: brightness(130%);
+    }
     &[type="submit"] {
       cursor: pointer;
       width: 10em;
       &:hover {
-        filter: brightness(110%);
+        filter: contrast(130%);
       }
     }
   }
@@ -93,14 +111,16 @@
 div.warning {
   display: inline-block;
   padding: 0 10px;
-  background-color: #94941a;
+  color: #e30;
+  font-weight: bold;
   height: 100%;
   position: absolute;
   right: 42%;
+  opacity: .3;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #434954;
+  background-color: #464846;
 }
 
 ::-webkit-scrollbar {
@@ -108,6 +128,6 @@ div.warning {
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 2px solid #434954;
-  background-color: #677185;
+  border: 2px solid #464846;
+  background-color: #313233;
 }

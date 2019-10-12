@@ -87,6 +87,7 @@ const getNavigationTabs = (user: User) => {
 )};
 
 export default class App extends React.Component<{}, AppState> {
+    private static background = require('./static/img/Website-Design-Background.png');
 
     constructor(props: {}) {
         super(props);
@@ -101,7 +102,6 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        console.log(this.state.validationPassed);
         return (
             <BrowserRouter>
                 <div className="App">
@@ -114,7 +114,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>}
                         </div>
                     </div>
-                    <div className="App-content">
+                    <div className="App-content" style={{backgroundImage: `url(${App.background})`}}>
                         <Route exact path="/" render={() => <Redirect to="/home"/>}/>
                         <Route exact path="/home" component={Home}/>
                         {this.state.user.sessionID ?
@@ -135,7 +135,6 @@ export default class App extends React.Component<{}, AppState> {
                         }
                     </div>
                 </div>
-            }
             </BrowserRouter>
         );
     }
