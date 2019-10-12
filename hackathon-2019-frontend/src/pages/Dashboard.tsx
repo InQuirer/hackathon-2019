@@ -1,31 +1,24 @@
 import React from 'react';
 import {NavigationObject} from '../App';
 
-interface HistoryProps {
+interface DashboardProps {
     match: any;
 }
-interface HistoryState {data: {}[]}
+interface DashboardState {data: {}[]}
 
-export default class History extends React.Component<HistoryProps, HistoryState> {
-    static readonly nav: NavigationObject = {path: '/history', displayName: 'History', description: 'Look up to the history of alerts'};
+export default class Dashboard extends React.Component<DashboardProps, DashboardState> {
+    static readonly nav: NavigationObject = {path: '/dashboard', displayName: 'Dashboard', description: 'Look up to the Dashboard of alerts'};
     private _isMounted: boolean = false;
 
-    constructor(props: HistoryProps) {
+    constructor(props: DashboardProps) {
         super(props);
-        this.state = {data: [
-                {"id":1,"type":0,"asset":"1.1.1.1"},
-                {"id":2,"type":1,"asset":"http://wordpress.com"},
-                {"id":3,"type":0,"asset":"1.1.1.1"},
-                {"id":4,"type":1,"asset":"http://wordpress.com"},
-                {"id":5,"type":0,"asset":"1.1.1.1"},
-                {"id":6,"type":1,"asset":"http://wordpress.com"}
-            ]};
+        this.state = {data: []};
     }
 
     componentDidMount() {
         this._isMounted = true;
         const URL = 'http://getsec.eu:8000/api/v1/assets/?format=json';
-        false && fetch(URL)
+        fetch(URL)
             .then(response => response.json())
             .then(result => this.mountedSetState({data: result}))
             .catch(e => console.log(e));
@@ -40,16 +33,16 @@ export default class History extends React.Component<HistoryProps, HistoryState>
     render(): React.ReactNode {
         const keys = Object.keys(this.state.data[0]);
         return (
-            <div className="History">
+            <div className="Dashboard">
                 <div className="DataRow">
                     {keys.map((value, key) =>
-                        <div>
+                        <div key={key}>
                             {!key ? value : <span>{value}</span>}
                         </div>
                     )}
                 </div>
-                {this.state.data.map((value: any) => (
-                    <div className="DataRow">
+                {this.state.data.map((value: any, key) => (
+                    <div className="DataRow" key={key}>
                         <div>
                             {value.id}
                         </div>

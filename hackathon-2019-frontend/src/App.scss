@@ -4,7 +4,6 @@
   height: 100vh;
   background-attachment: fixed;
   background-size: cover;
-  //background-color: #aaa;
   background-blend-mode: multiply;
 }
 
@@ -56,29 +55,42 @@
   }
 }
 
-.History {
+.Dashboard {
   width: 100em;
   margin: auto;
 }
 
 .Home {
-  //height: 100vh;
   background-attachment: fixed;
   background-size: cover;
-  //background-color: #aaa;
   background-blend-mode: multiply;
 }
+
 .DataRow {
   display: table-row;
   text-align: left;
+  background-color: #27282a96;
   & div {
-    display: table-cell;
     border: 1px solid black;
     padding: 10px;
-    & span {
-      //min-width: 200px;
-      color: bisque;
-      display: inline-table;
+  }
+}
+
+input {
+  color: #c6c7c6;
+  margin: 5px auto;
+  min-width: 25em;
+  padding: 7px;
+  background-color: #33333333;
+  border: solid 1px #313233;
+  transition: 256ms;
+  &:focus {
+    filter: brightness(130%);
+  }
+  &[type="submit"] {
+    cursor: pointer;
+    &:hover {
+      filter: contrast(130%);
     }
   }
 }
@@ -86,25 +98,9 @@
 .Login {
   margin-top: 40vh;
   & input {
-    color: #c6c7c6;
     display: block;
     margin: 10px auto;
-    width: 25em;
-    padding: 7px;
-    background-color: #33333333;
-    border: solid 1px #313233;
     font-size: 1.3em;
-    transition: 256ms;
-    &:focus {
-      filter: brightness(130%);
-    }
-    &[type="submit"] {
-      cursor: pointer;
-      width: 10em;
-      &:hover {
-        filter: contrast(130%);
-      }
-    }
   }
 }
 

@@ -4,7 +4,7 @@ import {NavigationObject} from '../App';
 interface AdminProps {
     match: any;
 }
-interface AdminState {data: {}}
+interface AdminState {data: {asset: string}[]}
 
 export default class Admin extends React.Component<AdminProps, AdminState> {
     private _isMounted: boolean = false;
@@ -12,16 +12,16 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
 
     constructor(props: AdminProps) {
         super(props);
-        this.state = {data: {}};
+        this.state = {data: []};
     }
 
     componentDidMount() {
         this._isMounted = true;
-        const URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+        const URL = 'http://getsec.eu:8000/api/v1/assets/?format=json';
         fetch(URL)
             .then(response => response.json())
             .then(result => this.mountedSetState({data: result}))
-            .catch(e => console.log(e));;
+            .catch(e => console.log(e));
     }
 
     componentWillUnmount() {
@@ -31,27 +31,40 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
     mountedSetState = (state: {}) => this._isMounted && this.setState(state);
 
     render(): React.ReactNode {
-        const keys = Object.keys(this.state.data);
         return (
             <div className="Admin">
                 <div className="DataRow">
-                    {keys.map((value, key) =>
-                        <div>
-                            {!key ? value : <span>{value}</span>}
-                        </div>
-                    )}
+                    <div>assets (IP or DNS)</div>
                 </div>
-                {Object.entries(this.state.data).map((el: [string, any], key) => (
+                {this.state.data.map((el, key) => (
                     <div key={key} className="DataRow">
-                        <div>
-                            {el[0]}
-                        </div>
-                        <div>
-                            <span>{JSON.stringify(el[1])}</span>
-                        </div>
+                        <input
+                            autoFocus={!key}
+                            value={el.asset}
+                            onChange={e => this.changeValue(key, e.target.value)}/>
                     </div>
                 ))}
+                <div className="DataRow">
+                    <input type="submit" value="Update" onClick={this.updateAssets}/>
+                </div>
             </div>
         );
+    }
+
+    private changeValue(key: number, value: string) {
+        const data = this.state.data;
+        data[key].asset = value;
+        this.mountedSetState(data);
+    }
+
+    private updateAssets = () => {
+        if (this.state.data.length) {
+            const body = JSON.stringify(this.state.data.map(el => el.asset));
+            fetch('http://getsec.eu:8000/api/v1/assets', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: body,
+            }).catch(console.log);
+        }
     }
 }
