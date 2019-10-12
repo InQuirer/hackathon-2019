@@ -63,6 +63,29 @@
     }
   }
 }
+
+.Login {
+  margin-top: 40vh;
+  & input {
+    color: #09d3ac;
+    display: block;
+    margin: 10px auto;
+    width: 25em;
+    padding: 5px;
+    background-color: #333;
+    border: solid 1px #677185;
+    font-size: 1em;
+    transition: 256ms;
+    &[type="submit"] {
+      cursor: pointer;
+      width: 10em;
+      &:hover {
+        filter: brightness(110%);
+      }
+    }
+  }
+}
+
 ::-webkit-scrollbar-track {
   background-color: #434954;
 }
