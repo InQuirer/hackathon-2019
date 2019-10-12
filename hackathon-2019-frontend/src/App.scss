@@ -1,0 +1,77 @@
+.App {
+  background-color: #282c34;
+  color: white;
+  height: 100vh;
+}
+
+.App-header {
+  text-align: left;
+  background-color: #253e41;
+  font-size: calc(10px + 2vmin);
+  height: 50px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.App-content {
+  padding: 10px;
+  text-align: center;
+  background-color: #282c34;
+  position: relative;
+  top: 50px;
+}
+
+.App-navigation {
+  height: 100%;
+  display: inline-block;
+
+}
+
+.App-link {
+  display: inline-block;
+  padding: 0 10px;
+  height: 100%;
+  color: #09d3ac;
+  text-decoration: none;
+  transition: 256ms;
+  &:hover {
+    background-color: #434954;
+  }
+  &.active {
+    background-color: #677185;
+  }
+}
+
+.History {
+  width: 100em;
+  margin: auto;
+}
+
+.DataRow {
+  display: table-row;
+  text-align: left;
+  & div {
+    display: table-cell;
+    border: 1px solid black;
+    padding: 10px;
+    & span {
+      min-width: 200px;
+      color: bisque;
+      display: inline-table;
+    }
+  }
+}
+::-webkit-scrollbar-track {
+  background-color: #434954;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #434954;
+  background-color: #677185;
+}
