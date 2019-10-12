@@ -1,10 +1,17 @@
 import React from 'react';
 import {NavigationObject} from '../App';
+import Select from "react-select";
 
 interface AdminProps {
     match: any;
 }
-interface AdminState {data: {asset: string}[]}
+interface AdminState {data: {asset: string, type: number}[]}
+interface ActionType {type: number, label: string};
+const AssetTypes: ActionType[] = [
+    { type: 1, label: 'IP' },
+    { type: 2, label: 'Domain' },
+    { type: 3, label: 'Email' },
+];
 
 export default class Admin extends React.Component<AdminProps, AdminState> {
     private _isMounted: boolean = false;
@@ -34,18 +41,29 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
         return (
             <div className="Admin">
                 <div className="DataRow">
-                    <div>assets (IP or DNS)</div>
+                    <div className="DataRowCell">Assets (IP, Domain or Email)</div>
                 </div>
                 {this.state.data.map((el, key) => (
                     <div key={key} className="DataRow">
+                        <Select
+                            onKeyDown={e => e.keyCode === 9 || e.preventDefault()}
+                            className="select-component-root"
+                            value={AssetTypes[el.type - 1]}
+                            onChange={(item: any) => this.changeType(key, item)}
+                            options={AssetTypes}
+                        />
                         <input
                             autoFocus={!key}
                             value={el.asset}
-                            onChange={e => this.changeValue(key, e.target.value)}/>
+                            placeholder={`# ${key + 1}`}
+                            onChange={e => this.changeValue(key, e.target.value)}
+                        />
+                        <input type="submit" className="button red" value="Remove asset" onClick={() => this.removeAsset(key)}/>
                     </div>
                 ))}
                 <div className="DataRow">
-                    <input type="submit" value="Update" onClick={this.updateAssets}/>
+                    <input type="submit" className="button green" value="Add asset" onClick={this.addAsset}/>
+                    <input type="submit" className="button blue" value="Update" onClick={this.pushAssets}/>
                 </div>
             </div>
         );
@@ -57,14 +75,31 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
         this.mountedSetState(data);
     }
 
-    private updateAssets = () => {
+    private pushAssets = () => {
+        const body = JSON.stringify(this.state.data.map(el => ({asset: el.asset, type: el.type})));
+        console.log(body);
         if (this.state.data.length) {
-            const body = JSON.stringify(this.state.data.map(el => el.asset));
             fetch('http://getsec.eu:8000/api/v1/assets', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: body,
             }).catch(console.log);
         }
+    }
+
+    private addAsset = () => {
+        const data = this.state.data;
+        data.push({asset: '', type: 1});
+        this.mountedSetState(data);
+    }
+
+    private removeAsset = (key: number) => {
+        this.mountedSetState({data: this.state.data.filter((_, i) => i !== key)});
+    }
+
+    private changeType = (key: number, item: ActionType) => {
+        const data = this.state.data;
+        data[key].type = item.type;
+        this.mountedSetState(data);
     }
 }

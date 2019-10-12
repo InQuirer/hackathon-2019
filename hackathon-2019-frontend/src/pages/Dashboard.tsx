@@ -31,28 +31,35 @@ export default class Dashboard extends React.Component<DashboardProps, Dashboard
     mountedSetState = (state: {}) => this._isMounted && this.setState(state);
 
     render(): React.ReactNode {
-        const keys = Object.keys(this.state.data[0]);
         return (
             <div className="Dashboard">
-                <div className="DataRow">
-                    {keys.map((value, key) =>
-                        <div key={key}>
-                            {!key ? value : <span>{value}</span>}
-                        </div>
-                    )}
+                <div className="data-source green">
+                    Logisitcs
                 </div>
-                {this.state.data.map((value: any, key) => (
-                    <div className="DataRow" key={key}>
-                        <div>
-                            {value.id}
-                        </div>
-                        <div>
-                            <span>{value.type}</span>
-                        </div><div>
-                            <span>{value.asset}</span>
-                        </div>
-                    </div>
-                ))}
+                <div className="data-source red">
+                    CRM
+                </div>
+                <div className="data-source orange">
+                    Something else
+                </div>
+                <div className="data-source">
+                    Logisitcs
+                </div>
+                <div className="data-source">
+                    CRM
+                </div>
+                <div className="data-source">
+                    Something else
+                </div>
+                <div className="data-source">
+                    Logisitcs
+                </div>
+                <div className="data-source">
+                    CRM
+                </div>
+                <div className="data-source">
+                    Something else
+                </div>
             </div>
         );
     }
