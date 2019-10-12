@@ -36,6 +36,10 @@
   color: #09d3ac;
   text-decoration: none;
   transition: 256ms;
+  &.right {
+    right: 0;
+    position: absolute;
+  }
   &:hover {
     background-color: #434954;
   }

@@ -7,6 +7,7 @@ import Admin from './pages/Admin';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import {getHashes} from 'crypto';
+import Logout from "./pages/Logout";
 
 export interface NavigationObject {
     path: string;
@@ -49,7 +50,9 @@ const getNavigationTabs = (user: User) => {
             >
                 {Home.nav.displayName}
             </NavLink>
-            {user.sessionID ? navigationMap.map((el, key) =>
+            {user.sessionID ?
+                <React.Fragment>
+                    {navigationMap.map((el, key) =>
                     <NavLink
                         key={key}
                         className="App-link"
@@ -58,7 +61,16 @@ const getNavigationTabs = (user: User) => {
                         isActive={() => el.path.endsWith(window.location.pathname.split('/')[1])}
                     >
                         {el.displayName}
-                    </NavLink>)
+                    </NavLink>)}
+                    <NavLink
+                        className="App-link right"
+                        to={Logout.nav.path}
+                        title={Logout.nav.description}
+                        isActive={() => Logout.nav.path.endsWith(window.location.pathname.split('/')[1])}
+                    >
+                        {Logout.nav.displayName}
+                    </NavLink>
+                </React.Fragment>
                 :
                 <React.Fragment>
                     <NavLink
@@ -111,6 +123,8 @@ export default class App extends React.Component<{}, AppState> {
                                 {/*<Route exact path={`${History.nav.path}/:ID`} component={History} />*/}
                                 <Route exact path={Admin.nav.path} component={Admin} />
                                 {/*<Route exact path={`${Admin.nav.path}/:ID`} component={Admin} />*/}
+                                <Route exact path="/logout" render={(props) =>
+                                    <Logout {...props} logout={this.logout} />}/>
                             </React.Fragment>
                             :
                             <React.Fragment>
@@ -138,5 +152,13 @@ export default class App extends React.Component<{}, AppState> {
             this.state.user.sessionID = getHashes()[1];
         }
         this.setState({validationPassed: validationPassed, user: this.state.user});
+    };
+
+    private logout = () => {
+        this.setState({validationPassed: undefined, user: {
+            name: '',
+            email: '',
+            sessionID: ''
+        }});
     };
 }

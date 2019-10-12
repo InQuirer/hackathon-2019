@@ -20,18 +20,22 @@ export default class Login extends React.Component<LoginProps, UserCredentials> 
     render(): React.ReactNode {
         return (
             <div className="Login">
-                <input type="text"
+                <form onSubmit={e => e.preventDefault()}>
+                <input type="email"
+                       required={true}
                        value={this.state.email}
                        onChange={(e) => this.setState({email: e.target.value})}
                        onKeyDown={(e) => e.keyCode === 13 && this.authorize()}
-                       placeholder="Login or Email"
+                       placeholder="Email"
                        autoFocus={true}/>
                 <input type="text"
+                       required={true}
                        value={this.state.password}
                        onChange={(e) => this.setState({password: e.target.value})}
                        onKeyDown={(e) => e.keyCode === 13 && this.authorize()}
                        placeholder="Password"/>
                 <input type="submit" onClick={this.authorize}/>
+                </form>
             </div>
         );
     }
