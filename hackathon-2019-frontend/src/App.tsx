@@ -46,21 +46,47 @@ const navigationMap: NavigationObject[] = [
 
 interface AppState {validationPassed: boolean | undefined}
 
+export const EmptyLink = (className?: string, innerHTML?: any) =>
+    <NavLink className={className || ""} to="">{innerHTML || ""}</NavLink>;
+
+const LoginLink =
+    <NavLink
+        className="App-link"
+        to={Login.nav.path}
+        title={Login.nav.description}
+        isActive={() => Login.nav.path.endsWith(window.location.pathname.split('/')[1])}
+    >
+        {Login.nav.displayName}
+    </NavLink>;
+
+const LogoutLink =
+    <NavLink
+        className="App-link right"
+        to={Logout.nav.path}
+        title={Logout.nav.description}
+        isActive={() => Logout.nav.path.endsWith(window.location.pathname.split('/')[1])}
+    >
+        {Logout.nav.displayName}
+    </NavLink>;
+
+const HomeLink =
+    <NavLink
+        className="App-link"
+        to={Home.nav.path}
+        title={Home.nav.description}
+        isActive={() => Home.nav.path.endsWith(window.location.pathname.split('/')[1])}
+    >
+        {Home.nav.displayName}
+    </NavLink>;
+
 const getNavigationTabs = (user: User) => {
     return (
         <React.Fragment>
-            <NavLink
-                className="App-link"
-                to={Home.nav.path}
-                title={Home.nav.description}
-                isActive={() => Home.nav.path.endsWith(window.location.pathname.split('/')[1])}
-            >
-                {Home.nav.displayName}
-            </NavLink>
+            <li>{HomeLink}</li>
             {user.sessionID ?
                 <React.Fragment>
                     {navigationMap.map((el, key) =>
-                    <NavLink
+                    <li><NavLink
                         key={key}
                         className="App-link"
                         to={el.path}
@@ -68,27 +94,11 @@ const getNavigationTabs = (user: User) => {
                         isActive={() => el.path.endsWith(window.location.pathname.split('/')[1])}
                     >
                         {el.displayName}
-                    </NavLink>)}
-                    <NavLink
-                        className="App-link right"
-                        to={Logout.nav.path}
-                        title={Logout.nav.description}
-                        isActive={() => Logout.nav.path.endsWith(window.location.pathname.split('/')[1])}
-                    >
-                        {Logout.nav.displayName}
-                    </NavLink>
+                    </NavLink></li>)}
+                    <li>{LogoutLink}</li>
                 </React.Fragment>
                 :
-                <React.Fragment>
-                    <NavLink
-                        className="App-link"
-                        to={Login.nav.path}
-                        title={Login.nav.description}
-                        isActive={() => Login.nav.path.endsWith(window.location.pathname.split('/')[1])}
-                    >
-                        {Login.nav.displayName}
-                    </NavLink>
-                </React.Fragment>
+                <li>{LoginLink}</li>
             }
         </React.Fragment>
 )};
@@ -107,37 +117,105 @@ export default class App extends React.Component<{}, AppState> {
     render() {
         return (
             <BrowserRouter>
-                <div className="App">
-                    <div className="App-header">
-                        <div className="App-navigation">
-                            {getNavigationTabs(this.user)}
-                            {this.state.validationPassed === false &&
-                                <div className="warning">
-                                    Please check your input
-                                </div>}
-                        </div>
-                    </div>
-                    <div className="App-content" style={{backgroundImage: `url(${App.background})`}}>
-                        <Route exact path={Home.nav.path} component={Home}/>
-                        <Route exact path={Logout.nav.path} render={(props) =>
-                            <Logout {...props} logout={this.logout}/>}/>
-                        {this.user.sessionID ?
-                            <React.Fragment>
-                                <Route exact path={Login.nav.path} render={() => <Redirect to={Home.nav.path}/>}/>
-                                <Route exact path={Dashboard.nav.path} component={Dashboard}/>
-                                {/*<Route exact path={`${Dashboard.nav.path}/:ID`} component={Dashboard} />*/}
-                                <Route exact path={Admin.nav.path} component={Admin}/>
-                                {/*<Route exact path={`${Admin.nav.path}/:ID`} component={Admin} />*/}
-                            </React.Fragment>
-                            :
-                            <React.Fragment>
-                                <Route exact path={Login.nav.path} render={(props) =>
-                                    <Login {...props} authenticate={this.authenticate}/>}/>
-                            </React.Fragment>
+                <div className="nav-container">
 
-                        }
-                        <Route exact path="/" render={() => <Redirect to={Home.nav.path}/>}/>
+                    <div className="via-1570873225800">
+                        <div className="bar bar--sm visible-xs">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-9 col-md-10 text-right">
+                                        {EmptyLink("hamburger-toggle",
+                                            <i className="icon icon--sm stack-interface stack-menu"/>)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <nav id="menu1" className="bar bar-1 hidden-xs">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-lg-11 col-md-12 text-right text-left-xs text-left-sm">
+                                        <div className="bar__module">
+                                            <ul className="menu-horizontal text-left">
+                                                {getNavigationTabs(this.user)}
+                                                <li className="dropdown">
+                                                    <div className="dropdown__container">
+                                                        <div className="container">
+                                                            <div className="row">
+                                                                <div className="dropdown__content col-lg-2">
+                                                                    <ul className="menu-vertical">
+                                                                        <li>{EmptyLink()}</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li className="dropdown">
+                                                    <div className="dropdown__container">
+                                                        <div className="container">
+                                                            <div className="row">
+                                                                <div className="dropdown__content row w-100">
+                                                                    <div className="col-lg-3">
+                                                                        <h5>Menu Title</h5>
+                                                                        <ul className="menu-vertical">
+                                                                            <li>{EmptyLink()}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div className="col-lg-3">
+                                                                        <h5>Menu Title</h5>
+                                                                        <ul className="menu-vertical">
+                                                                            <li>{EmptyLink()}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div className="col-lg-3">
+                                                                        <h5>Menu Title</h5>
+                                                                        <ul className="menu-vertical">
+                                                                            <li>{EmptyLink()}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div className="col-lg-3">
+                                                                        <h5>Menu Title</h5>
+                                                                        <ul className="menu-vertical">
+                                                                            <li>{EmptyLink()}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="bar__module">
+                                            {EmptyLink("btn btn--sm btn--primary type--uppercase",
+                                                <span className="btn__text">Buy Now</span>)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
                     </div>
+                </div>
+                <div className="main-container">
+                    <Route exact path={Home.nav.path} component={Home}/>
+                    <Route exact path={Logout.nav.path} render={(props) =>
+                        <Logout {...props} logout={this.logout}/>}/>
+                    {this.user.sessionID ?
+                        <React.Fragment>
+                            <Route exact path={Login.nav.path} render={() => <Redirect to={Home.nav.path}/>}/>
+                            <Route exact path={Dashboard.nav.path} component={Dashboard}/>
+                            {/*<Route exact path={`${Dashboard.nav.path}/:ID`} component={Dashboard} />*/}
+                            <Route exact path={Admin.nav.path} component={Admin}/>
+                            {/*<Route exact path={`${Admin.nav.path}/:ID`} component={Admin} />*/}
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <Route exact path={Login.nav.path} render={(props) =>
+                                <Login {...props} authenticate={this.authenticate}/>}/>
+                        </React.Fragment>
+
+                    }
+                    <Route exact path="/" render={() => <Redirect to={Home.nav.path}/>}/>
                 </div>
             </BrowserRouter>
         );
