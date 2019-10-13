@@ -1,8 +1,12 @@
 # import sys
-import shodan
-import requests
 import socket
 from datetime import datetime
+
+import requests
+import shodan
+
+import cve_lookup
+import send_email
 
 # Input validation
 # if len(sys.argv) != 3:
@@ -18,7 +22,8 @@ api = shodan.Shodan(api_key)
 # search_type = sys.argv[1]
 # search_term = sys.argv[2]
 
-url = "http://getsec.eu:8000/api/v1/"
+url = "https://getsec.eu/api/v1/"
+url_contacts = "https://getsec.eu/api/v1/asset_processes_contacts/"
 
 
 # def _compare_scans(old_scan, new_scan):
@@ -85,34 +90,56 @@ def scan_ip(search_type: str, asset: dict):
                 ip = socket.gethostbyname(ip)
             print(f"\"{ip}\"")
             result = api.host(ip, minify=True)
-            print(f"result: {result}")
-            db_last_shodan = requests.get(url + "shodan_scans/?limit=1").json()["results"][0]
-
-            if result["last_update"] != db_last_shodan["last_shodan_update"]:
+            db_last_shodans = requests.get(url + "shodan_scans/?limit=1").json()["results"]
+            if not (len(db_last_shodans) > 0 and result["last_update"] == db_last_shodans[0]["last_shodan_update"]):
                 if "vulns" in result:
-                    print(f"asset: {asset}")
                     scan = {
                         "timestamp": datetime.now().ctime(),
                         "asset": asset["id"],
                         "last_shodan_update": result["last_update"]
                     }
-                    print(scan)
-                    response = requests.post(url + "shodan_scans/", json=scan, auth=("admin", "viensviens"))
+                    response = requests.post(url + "shodan_scans/", json=scan, auth=("admin", "garage48password"))
                     print(response.text)
                     scan_id = response.json()["id"]
                     print(f"Scan: {scan}")
                     # print(requests.get(url + "shodan_scans", auth=("admin", "viensviens")).json())
 
-                    for vuln in result["vulns"]:
+                    vulns = result["vulns"]
+                    ports = result["ports"]
+                    print(f"vulns: {vulns}")
+                    print(f"ports: {ports}")
+                    for vuln in vulns:
                         requests.post(url + "shodan_vulns/", json={
                             "scan": scan_id,
                             "cve_name": vuln
-                        }, auth=("admin", "viensviens"))
-                    for port in result["ports"]:
+                        }, auth=("admin", "garage48password"))
+                    for port in ports:
                         requests.post(url + "shodan_ports/", json={
                             "scan": scan_id,
                             "port": port
-                        }, auth=("admin", "viensviens"))
+                        }, auth=("admin", "garage48password"))
+
+                    print("making intel")
+                    intel = {
+                        "asset": asset["id"],
+                        "scan": scan_id,
+                        "type": type,
+                        "message": f"We have intelligence about some serious security risks in your company systems. We have identified {len(vulns) + len(ports)} serious threats that hackers can use to compromise your business.",
+                        "risk": cve_lookup.total_risk(vulns)
+                    }
+                    print("intel made")
+                    recipient = requests.get(url_contacts + str(asset["id"])).json()
+                    print(f"recipient: {recipient}")
+                    # TODO save intel to database
+
+                    data = {
+                        "subject": "Vulnerabilities detected",
+                        "body": f"<h3>{intel['message']}</h3>"
+                    }
+                    send_email.send_email(recipient, data)
+                    print(f"sending {data}")
+                    print("email sent")
+
             else:
                 print("No new update from Shodan")
 

@@ -5,7 +5,7 @@
       <paths name="Hackathon2019">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/hackathon2019" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

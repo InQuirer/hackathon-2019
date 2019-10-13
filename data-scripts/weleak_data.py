@@ -1,25 +1,33 @@
 import requests
 
-api_key = "11f4b8ac5f9924d0e082d00c5b44228f3e3b7740"
-hed = {
-    'Authorization': 'Bearer ' + api_key,
-    "User-Agent": "Hackathon 2019 SIS, getsec.eu",
-    "Content-Type": "application/x-www-form-urlencoded"
+api_key = "f69cec9752631e509dcd19744df8dab3a2d33731"
+headers = {
+    'user-agent': "Hackathon2019-SIS",
+    'authorization': api_key
 }
-url = "https://api.weleakinfo.com/v3/search"
+querystring = {"details": "true"}
 
 types = {
     1: "ip",
-    2: "domain_name",
+    2: "domain",
     3: "email"
 }
 
 
 def scan(asset: dict):
-    global weleak_search, api_key
 
     type = types[int(asset["type"])]
-    data = {
+    print(f"asset type: {type}")
+    url = f"https://api.weleakinfo.com/v3/public/{type}/{asset['asset']}"
 
-    }
-    response = requests.post(url, json=data, headers=hed)
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    print(f"weleak status: {response.status_code}")
+    json = response.json()
+    print(f"weleak json: {json}")
+    if json["Success"] == "true":
+        data = json["Data"]
+        print(f"weleak data: {data}")
+        return data
+    else:
+        print(f"Failed to acquire info about {asset['asset']} on weleak")
+    return {}
