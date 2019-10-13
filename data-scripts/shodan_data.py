@@ -1,7 +1,7 @@
 # import sys
 import shodan
-import os
 import requests
+import socket
 from datetime import datetime
 
 # Input validation
@@ -38,7 +38,7 @@ url = "http://getsec.eu:8000/api/v1/"
 #     }
 
 
-def scan_ip(search_type: str, search_term: str):
+def scan_ip(search_type: str, asset: dict):
     # Wrap the request in a try/ except block to catch errors
     try:
         results = {}
@@ -80,24 +80,37 @@ def scan_ip(search_type: str, search_term: str):
             # else:
             #     print("Failed to retrieve last scan data")
         elif search_type == "host":
-            result = api.host(search_term)
-            if "vulns" in result:
+            ip = asset["asset"]
+            if asset["type"] == 2:
+                ip = socket.gethostbyname(ip)
+            print(f"\"{ip}\"")
+            result = api.host(ip, minify=True)
+            print(f"result: {result}")
+            last_shodan = requests.get(url + "last_shodan").json()["last_update"]
+            if result["last_update"] != last_shodan and "vulns" in result:
+                print(f"asset: {asset}")
                 scan = {
-                    "timestamp": datetime.now(),
+                    "timestamp": datetime.now().ctime(),
+                    "asset": asset["id"],
                     "last_shodan_update": result["last_update"]
                 }
-                requests.post(url + "shodan_scans", json=scan)
+                print(scan)
+                response = requests.post(url + "shodan_scans/", json=scan, auth=("admin", "viensviens"))
+                print(response.text)
+                scan_id = response.json()["id"]
+                # print(f"Scan: {scan}")
+                # print(requests.get(url + "shodan_scans", auth=("admin", "viensviens")).json())
 
                 for vuln in result["vulns"]:
-                    requests.post(url + "shodan_vulns", json={
-                        "scan": scan,
+                    requests.post(url + "shodan_vulns/", json={
+                        "scan": scan_id,
                         "cve_name": vuln
-                    })
+                    }, auth=("admin", "viensviens"))
                 for port in result["ports"]:
-                    requests.post(url + "shodan_ports", json={
-                        "scan": scan,
+                    requests.post(url + "shodan_ports/", json={
+                        "scan": scan_id,
                         "port": port
-                    })
+                    }, auth=("admin", "viensviens"))
 
     except Exception as e:
         print(e)

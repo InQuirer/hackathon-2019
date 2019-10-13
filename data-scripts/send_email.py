@@ -10,7 +10,7 @@ subject = 'Automatic report on vulnerabilities'
 api_key = "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"
 recipient = sys.argv[1]
 
-with open("body.html") as f:
+with open("send_email_body.html") as f:
     email_body = f.read()
 
 message = Mail(
