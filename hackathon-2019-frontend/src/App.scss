@@ -176,6 +176,17 @@ div.data-source {
   }
 }
 
+.container {
+  background-color: #33333369;
+  border: solid 1px #313233;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 256ms;
+  padding: 20px;
+  width: 55%;
+  margin: 40px auto;
+}
+
 *:focus {
   outline: none;
 }

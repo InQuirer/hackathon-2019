@@ -17,7 +17,7 @@ export default class Dashboard extends React.Component<DashboardProps, Dashboard
 
     componentDidMount() {
         this._isMounted = true;
-        const URL = 'http://getsec.eu:8000/api/v1/assets/?format=json';
+        const URL = 'https://getsec.eu/api/v1/assets/?format=json';
         fetch(URL)
             .then(response => response.json())
             .then(result => this.mountedSetState({data: result}))
