@@ -86,31 +86,35 @@ def scan_ip(search_type: str, asset: dict):
             print(f"\"{ip}\"")
             result = api.host(ip, minify=True)
             print(f"result: {result}")
-            last_shodan = requests.get(url + "last_shodan").json()["last_update"]
-            if result["last_update"] != last_shodan and "vulns" in result:
-                print(f"asset: {asset}")
-                scan = {
-                    "timestamp": datetime.now().ctime(),
-                    "asset": asset["id"],
-                    "last_shodan_update": result["last_update"]
-                }
-                print(scan)
-                response = requests.post(url + "shodan_scans/", json=scan, auth=("admin", "viensviens"))
-                print(response.text)
-                scan_id = response.json()["id"]
-                # print(f"Scan: {scan}")
-                # print(requests.get(url + "shodan_scans", auth=("admin", "viensviens")).json())
+            db_last_shodan = requests.get(url + "shodan_scans/?limit=1").json()["results"][0]
 
-                for vuln in result["vulns"]:
-                    requests.post(url + "shodan_vulns/", json={
-                        "scan": scan_id,
-                        "cve_name": vuln
-                    }, auth=("admin", "viensviens"))
-                for port in result["ports"]:
-                    requests.post(url + "shodan_ports/", json={
-                        "scan": scan_id,
-                        "port": port
-                    }, auth=("admin", "viensviens"))
+            if result["last_update"] != db_last_shodan["last_shodan_update"]:
+                if "vulns" in result:
+                    print(f"asset: {asset}")
+                    scan = {
+                        "timestamp": datetime.now().ctime(),
+                        "asset": asset["id"],
+                        "last_shodan_update": result["last_update"]
+                    }
+                    print(scan)
+                    response = requests.post(url + "shodan_scans/", json=scan, auth=("admin", "viensviens"))
+                    print(response.text)
+                    scan_id = response.json()["id"]
+                    print(f"Scan: {scan}")
+                    # print(requests.get(url + "shodan_scans", auth=("admin", "viensviens")).json())
+
+                    for vuln in result["vulns"]:
+                        requests.post(url + "shodan_vulns/", json={
+                            "scan": scan_id,
+                            "cve_name": vuln
+                        }, auth=("admin", "viensviens"))
+                    for port in result["ports"]:
+                        requests.post(url + "shodan_ports/", json={
+                            "scan": scan_id,
+                            "port": port
+                        }, auth=("admin", "viensviens"))
+            else:
+                print("No new update from Shodan")
 
     except Exception as e:
         print(e)

@@ -20,11 +20,15 @@ def main():
     while True:
         if scan_assets:
             for asset in assets:
+                print(f"asset: {asset}")
                 type = asset["type"]
                 if type in [1, 2]:
                     shodan_data.scan_ip("host", asset)
                 elif type == 3:
                     hibpwned_data.scan_email(asset)
+                    sleep(1)
+                print()
+                sleep(0.5)
         print("Starting 5 min counter")
         sleep(300)
 
