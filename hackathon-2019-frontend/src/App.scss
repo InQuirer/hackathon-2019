@@ -23,7 +23,7 @@
   text-align: center;
   position: relative;
   top: 50px;
-  height: 100vh;
+  height: calc(100vh - 70px);
   background-attachment: fixed;
   background-size: cover;
   background-color: #aaa;
@@ -55,6 +55,11 @@
   }
 }
 
+.Admin {
+  display: table;
+  margin: 50px auto auto;
+}
+
 .Dashboard {
   width: 100em;
   margin: auto;
@@ -70,8 +75,7 @@
   display: table-row;
   text-align: left;
   background-color: #27282a96;
-  & div {
-    border: 1px solid black;
+  & .DataRowCell {
     padding: 10px;
   }
 }
@@ -80,15 +84,23 @@ input {
   color: #c6c7c6;
   margin: 5px auto;
   min-width: 25em;
-  padding: 7px;
+  padding: 15px;
   background-color: #33333333;
   border: solid 1px #313233;
   transition: 256ms;
+  &.button {
+    min-width: 10px;
+    &.red {filter: drop-shadow(0 0 red);}
+    &.green {filter: drop-shadow(0 0 green);}
+    &.blue {filter: drop-shadow(0 0 blue);}
+  }
   &:focus {
     filter: brightness(130%);
   }
   &[type="submit"] {
     cursor: pointer;
+    margin: 0;
+    min-width: 120px;
     &:hover {
       filter: contrast(130%);
     }
@@ -113,6 +125,70 @@ div.warning {
   position: absolute;
   right: 42%;
   opacity: .3;
+}
+
+div.data-source {
+  font-size: 2em;
+  display: inline-block;
+  padding: 40px;
+  margin: 40px;
+  background-color: #33333369;
+  border: solid 1px #313233;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 256ms;
+  &.red {
+    box-shadow: 0 0 40px -10px inset red;
+    text-shadow: 0 0 20px red;
+  }
+  &.green {
+    box-shadow: 0 0 40px -10px inset green;
+    text-shadow: 0 0 20px green;
+  }
+  &.orange {
+    box-shadow: 0 0 40px -10px inset orange;
+    text-shadow: 0 0 20px orange;
+  }
+  &:hover {filter: contrast(130%);}
+}
+
+.select-component-root {
+  width: 120px;
+  display: inline-block;
+  cursor: pointer;
+
+  & div {
+    border-radius: 0;
+    background-color: transparent;
+    border: 0;
+    color: #c6c7c6;
+    cursor: pointer;
+    & .css-1ml51p6-MenuList {
+      background-color: #2c2c2de8 !important;
+    }
+    & input {
+      cursor: pointer;
+      color: transparent !important;
+      &:active {
+        background-color: #2c2c2de8;
+      }
+    }
+  }
+}
+
+.container {
+  background-color: #33333369;
+  border: solid 1px #313233;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 256ms;
+  padding: 20px;
+  width: 55%;
+  margin: 40px auto;
+}
+
+*:focus {
+  outline: none;
 }
 
 ::-webkit-scrollbar-track {
