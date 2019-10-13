@@ -96,7 +96,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             console.log(body);
             const headers = new Headers();
             headers.set('Content-Type', 'application/json');
-            headers.set('Authorization', 'Basic YWRtaW46dmllbnN2aWVucw==');
+            headers.set('Authorization', 'Basic YWRtaW46Z2FyYWdlNDhwYXNzd29yZA==');
 
             if (asset.status === 1) {
                 fetch(`https://getsec.eu/api/v1/assets/${asset.id}/`, {
@@ -127,7 +127,7 @@ export default class Admin extends React.Component<AdminProps, AdminState> {
             const body = JSON.stringify(asset);
             const headers = new Headers();
             headers.set('Content-Type', 'application/json');
-            headers.set('Authorization', 'Basic YWRtaW46dmllbnN2aWVucw==');
+            headers.set('Authorization', 'Basic YWRtaW46Z2FyYWdlNDhwYXNzd29yZA==');
             fetch(`https://getsec.eu/api/v1/assets/${asset.id}/`, {
                 method: 'DELETE',
                 headers: headers,

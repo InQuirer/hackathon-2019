@@ -4,10 +4,16 @@ import {NavigationObject} from '../App';
 interface DashboardProps {
     match: any;
 }
-interface DashboardState {data: {}[]}
+interface DashboardState {data: ProcessObject[]}
+
+interface ProcessObject {
+    id: number;
+    name: string;
+}
 
 export default class Dashboard extends React.Component<DashboardProps, DashboardState> {
     static readonly nav: NavigationObject = {path: '/dashboard', displayName: 'Dashboard', description: 'Look up to the Dashboard of alerts'};
+    private static  colors = ['red', 'green', 'yellow'];
     private _isMounted: boolean = false;
 
     constructor(props: DashboardProps) {
@@ -17,10 +23,18 @@ export default class Dashboard extends React.Component<DashboardProps, Dashboard
 
     componentDidMount() {
         this._isMounted = true;
-        const URL = 'https://getsec.eu/api/v1/assets/?format=json';
+        const URL = 'https://getsec.eu/api/v1/processes/?format=json';
         fetch(URL)
             .then(response => response.json())
-            .then(result => this.mountedSetState({data: result}))
+            .then((result: ProcessObject[]) => {
+                const el = document.getElementById('dashboard-content');
+                let i = 0;
+                if (el) {
+                    result.forEach(item => {
+                        el.innerHTML += `<p class="lead data-source ${Dashboard.colors[i++ % 3]}">${item.name}</p>`;
+                    })
+                }
+            })
             .catch(e => console.log(e));
     }
 
@@ -31,36 +45,46 @@ export default class Dashboard extends React.Component<DashboardProps, Dashboard
     mountedSetState = (state: {}) => this._isMounted && this.setState(state);
 
     render(): React.ReactNode {
+        console.log(this.state.data);
+        let i = 0;
         return (
-            <div className="Dashboard">
-                <div className="data-source green">
-                    Logisitcs
+            <section>
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-md-10">
+                            <div className="tabs-container tabs--vertical">
+                                <ul className="tabs">
+                                    <li className="active">
+                                        <div className="tab__title"><i
+                                            className="icon icon--sm block icon-Target-Market"/> <span
+                                            className="h5">Risks </span></div>
+                                        <div className="tab__content" id="dashboard-content"/>
+                                    </li>
+                                    <li>
+                                        <div className="tab__title"><i
+                                            className="icon icon--sm block icon-Text-Effect"/> <span
+                                            className="h5">Setup</span></div>
+                                        <div className="tab__content">
+                                            <p className="lead">Domain<br/>IP<br/>E-Mail<br/>Sync interval<br/>TECH VULN to
+                                                BUSINESS risk mapping<br/><br/></p>
+                                            <p className="lead">Hngg<br/></p>
+                                            <p className="lead">CRM<br/></p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="tab__title"><i
+                                            className="icon icon--sm block icon-Love-User"/> <span className="h5">Tech Data</span>
+                                        </div>
+                                        <div className="tab__content">
+                                            <p className="lead">Access/Integration Logs<br/></p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="data-source red">
-                    CRM
-                </div>
-                <div className="data-source orange">
-                    Something else
-                </div>
-                <div className="data-source">
-                    Logisitcs
-                </div>
-                <div className="data-source">
-                    CRM
-                </div>
-                <div className="data-source">
-                    Something else
-                </div>
-                <div className="data-source">
-                    Logisitcs
-                </div>
-                <div className="data-source">
-                    CRM
-                </div>
-                <div className="data-source">
-                    Something else
-                </div>
-            </div>
+            </section>
         );
     }
 }

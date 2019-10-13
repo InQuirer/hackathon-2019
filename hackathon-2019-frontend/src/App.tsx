@@ -86,8 +86,7 @@ const getNavigationTabs = (user: User) => {
             {user.sessionID ?
                 <React.Fragment>
                     {navigationMap.map((el, key) =>
-                    <li><NavLink
-                        key={key}
+                    <li key={key}><NavLink
                         className="App-link"
                         to={el.path}
                         title={el.description}
